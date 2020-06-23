@@ -1384,6 +1384,90 @@ module.exports = {
       emitterId: null,
       metadata: {}
     }),
+
+    createModel({
+      id: 'evt_EpeFwVe1POP1kD7rvPOF',
+      createdDate: now,
+      type: 'category__created',
+      objectType: 'category',
+      objectId: 'ctgy_TKq8Je1ufL1kiOnvufB',
+      object: {
+        id: 'ctgy_TKq8Je1ufL1kiOnvufB',
+        createdDate: now,
+        updatedDate: now,
+        name: 'Some category',
+        parentId: null,
+        metadata: {},
+        platformData: {},
+      },
+      relatedObjectsIds: {},
+      apiVersion: '2019-05-20',
+      parentId: null,
+      emitter: 'core',
+      emitterId: null,
+      metadata: {}
+    }),
+
+    createModel({
+      id: 'evt_gnfJqBe1Ptf1kDd7vPtV',
+      createdDate: now,
+      type: 'message__created',
+      objectType: 'message',
+      objectId: 'msg_flUJiGe1E0R1k1jtvE0H',
+      object: {
+        id: 'msg_flUJiGe1E0R1k1jtvE0H',
+        createdDate: now,
+        updatedDate: now,
+        senderId: 'usr_QVQfQps1I3a1gJYz2I3a',
+        receiverId: 'user-external-id',
+        attachments: [],
+        read: false,
+        content: 'Good',
+        conversationId: 'conv_XyWGAe1NP31kB8VvNOt',
+        topicId: 'ast_2l7fQps1I3a1gJYz2I3a',
+        metadata: {},
+        platformData: {}
+      },
+      relatedObjectsIds: {},
+      apiVersion: '2019-05-20',
+      parentId: null,
+      emitter: 'core',
+      emitterId: null,
+      metadata: {}
+    }),
+
+    createModel({
+      id: 'evt_aMWHbre1AKV1jy3xvAKL',
+      createdDate: now,
+      type: 'entry__created',
+      objectType: 'entry',
+      objectId: 'ent_njUQtne1HZn1k5JFvHZd',
+      object: {
+        id: 'ent_njUQtne1HZn1k5JFvHZd',
+        createdDate: now,
+        updatedDate: now,
+        name: 'nameExample',
+        collection: 'someCollection',
+        fields: {
+          title: 'Random title',
+          content: 'Random content',
+          nestedContent: {
+            random1: {
+              random2: 'hello',
+            },
+            random3: 'bye'
+          },
+        },
+        locale: 'en-US',
+        metadata: {},
+      },
+      relatedObjectsIds: {},
+      apiVersion: '2019-05-20',
+      parentId: null,
+      emitter: 'core',
+      emitterId: null,
+      metadata: {}
+    }),
   ],
 
   entry: [
@@ -2778,6 +2862,7 @@ module.exports = {
     })
   ],
 
+  /* eslint-disable no-template-curly-in-string */
   workflow: [
     createModel({
       id: 'wfw_SEIfQps1I3a1gJYz2I3a',
@@ -2797,8 +2882,187 @@ module.exports = {
           test: true
         }
       }
-    })
+    }),
+
+    createModel({
+      id: 'wfw_FgOuMFe1Fas1k3KQXFas',
+      createdDate: now,
+      updatedDate: now,
+      name: 'Workflow for category creation',
+      event: 'category__created',
+      run: [{
+        endpointMethod: 'PATCH',
+        endpointUri: '/categories/${object.id}',
+        endpointPayload: JSON.stringify({
+          metadata: {
+            updated: true
+          }
+        })
+      }],
+      active: false,
+      stats: {
+        nbTimesRun: 0
+      },
+      metadata: {},
+      platformData: {}
+    }),
+
+    createModel({
+      id: 'wfw_rLeFN0e1qhs1keRT6qhs',
+      createdDate: now,
+      updatedDate: now,
+      name: 'Workflow for message creation',
+      event: 'message__created',
+      run: [{
+        endpointMethod: 'PATCH',
+        endpointUri: '/messages/${object.id}',
+        endpointPayload: JSON.stringify({
+          metadata: {
+            updated: true
+          }
+        })
+      }],
+      active: false,
+      stats: {
+        nbTimesRun: 0
+      },
+      metadata: {},
+      platformData: {}
+    }),
+
+    createModel({
+      id: 'wfw_cTcpRte10H01jo0bC0H0',
+      createdDate: now,
+      updatedDate: now,
+      name: 'Workflow for entry creation',
+      event: 'entry__created',
+      run: [{
+        endpointMethod: 'PATCH',
+        endpointUri: '/entries/${object.id}',
+        endpointPayload: JSON.stringify({
+          metadata: {
+            updated: true
+          }
+        })
+      }],
+      active: false,
+      stats: {
+        nbTimesRun: 0
+      },
+      metadata: {},
+      platformData: {}
+    }),
   ],
+
+  workflowLog: [
+    createModel({
+      id: 'wfl_2xgTTbe1Y161kLkYvY0w',
+      createdDate: now,
+      workflowId: 'wfw_FgOuMFe1Fas1k3KQXFas',
+      eventId: 'evt_EpeFwVe1POP1kD7rvPOF',
+      runId: '1cc28dc0-6d65-41cc-86ee-d742c7e40b94',
+      type: 'action',
+      statusCode: 200,
+      step: {
+        name: null,
+        error: false,
+        skipped: false,
+        stopped: false,
+        handleErrors: false,
+      },
+      metadata: {
+        endpointUri: '/categories/ctgy_TKq8Je1ufL1kiOnvufB',
+        eventObjectId: 'ctgy_TKq8Je1ufL1kiOnvufB',
+        endpointMethod: 'PATCH',
+        endpointHeaders: {},
+        endpointPayload: {
+          metadata: { updated: true }
+        }
+      },
+    }),
+
+    createModel({
+      id: 'wfl_dqlW0ve13Eu1jqykh3Ek',
+      createdDate: now,
+      workflowId: 'wfw_FgOuMFe1Fas1k3KQXFas',
+      eventId: 'evt_EpeFwVe1POP1kD7rvPOF',
+      runId: '931fd504-c88e-4f62-92a6-d1ddacc1a25d',
+      type: 'runError',
+      statusCode: 422,
+      step: {
+        name: null,
+        error: true,
+        skipped: false,
+        stopped: false,
+        handleErrors: false,
+      },
+      metadata: {
+        script: '/categories/${objectt.id}',
+        message: 'ReferenceError when building endpoint URL: objectt is not defined',
+        endpointUri: '/categories/${objectt.id}',
+        eventObjectId: 'ctgy_TKq8Je1ufL1kiOnvufB',
+        statusCodeName: 'Unprocessable Entity',
+        endpointMethod: 'PATCH',
+        endpointHeaders: {},
+        endpointPayload: {
+          metadata: { updated: true }
+        }
+      },
+    }),
+
+    createModel({
+      id: 'wfl_00CMxWe1OpY1kCZ0vOpO',
+      createdDate: now,
+      workflowId: 'wfw_rLeFN0e1qhs1keRT6qhs',
+      eventId: 'evt_gnfJqBe1Ptf1kDd7vPtV',
+      runId: '3c91884b-aede-4f92-b769-b086bbf6d4fd',
+      type: 'action',
+      statusCode: 200,
+      step: {
+        name: null,
+        error: false,
+        skipped: false,
+        stopped: false,
+        handleErrors: false,
+      },
+      metadata: {
+        endpointUri: '/messages/msg_flUJiGe1E0R1k1jtvE0H',
+        eventObjectId: 'msg_flUJiGe1E0R1k1jtvE0H',
+        endpointMethod: 'PATCH',
+        endpointHeaders: {},
+        endpointPayload: {
+          metadata: { updated: true }
+        }
+      },
+    }),
+
+    createModel({
+      id: 'wfl_fnWgpae1Fmz1k3WRvFmp',
+      createdDate: now,
+      workflowId: 'wfw_cTcpRte10H01jo0bC0H0',
+      eventId: 'evt_aMWHbre1AKV1jy3xvAKL',
+      runId: '96986184-5049-440a-b1ad-6c4d7e12081f',
+      type: 'action',
+      statusCode: 200,
+      step: {
+        name: null,
+        error: false,
+        skipped: false,
+        stopped: false,
+        handleErrors: false,
+      },
+      metadata: {
+        endpointUri: '/entries/ent_njUQtne1HZn1k5JFvHZd',
+        eventObjectId: 'ent_njUQtne1HZn1k5JFvHZd',
+        endpointMethod: 'PATCH',
+        endpointHeaders: {},
+        endpointPayload: {
+          metadata: { updated: true }
+        }
+      },
+    }),
+  ],
+  /* eslint-enable no-template-curly-in-string */
 
   webhook: [
     createModel({
@@ -2816,7 +3080,59 @@ module.exports = {
           test: true
         }
       }
-    })
-  ]
+    }),
+
+    createModel({
+      id: 'whk_1G6eyfe1CmT1k0WedCmJ',
+      createdDate: now,
+      updatedDate: now,
+      name: 'Webhook for message creation',
+      targetUrl: 'https://example.com/messageCreation',
+      event: 'message__created',
+      active: false,
+      metadata: {},
+      platformData: {}
+    }),
+
+    createModel({
+      id: 'whk_GDy1YAe1E8b1k1smdE8R',
+      createdDate: now,
+      updatedDate: now,
+      name: 'Webhook for entry creation',
+      targetUrl: 'https://example.com/entryCreation',
+      event: 'entry__created',
+      active: false,
+      metadata: {},
+      platformData: {}
+    }),
+  ],
+
+  webhookLog: [
+    createModel({
+      id: 'whl_PGs7t1e1u9R1khtcdu9H',
+      createdDate: now,
+      webhookId: 'whk_1G6eyfe1CmT1k0WedCmJ',
+      eventId: 'evt_gnfJqBe1Ptf1kDd7vPtV',
+      status: 'success',
+      metadata: {
+        date: now,
+        targetUrl: 'https://example.com/messageCreation',
+        eventObjectId: 'msg_flUJiGe1E0R1k1jtvE0H'
+      }
+    }),
+
+    createModel({
+      id: 'whl_u1CXfQe1B4z1jypAdB4p',
+      createdDate: now,
+      webhookId: 'whk_GDy1YAe1E8b1k1smdE8R',
+      eventId: 'evt_aMWHbre1AKV1jy3xvAKL',
+      status: 'success',
+      metadata: {
+        date: now,
+        targetUrl: 'https://example.com/entryCreation',
+        eventObjectId: 'ent_njUQtne1HZn1k5JFvHZd'
+      }
+    }),
+  ],
 
 }

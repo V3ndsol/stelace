@@ -4,7 +4,6 @@ const test = require('ava')
 const request = require('supertest')
 const express = require('express')
 const bodyParser = require('body-parser')
-const _ = require('lodash')
 
 const userServer = express()
 let userServerPort
@@ -18,85 +17,7 @@ const { apiVersions } = require('../../../src/versions')
 
 let userWebhookUrl
 
-const defaultTestDelay = 4000
-
-let createdWebhooks
-
 /* eslint-disable no-template-curly-in-string */
-
-async function createWebhookLogs (t) {
-  if (createdWebhooks) return createdWebhooks
-
-  const authorizationHeaders = await getAccessTokenHeaders({
-    t,
-    permissions: [
-      'webhookLog:list:all',
-      'webhook:create:all',
-      'category:create:all',
-      'entry:create:all',
-      'message:create:all',
-    ]
-  })
-
-  // should create webhooks that listen to events that are not triggered by any tests below
-
-  const { body: messageWebhook } = await request(t.context.serverUrl)
-    .post('/webhooks')
-    .set(authorizationHeaders)
-    .send({
-      name: 'Webhook for message creation',
-      event: 'message__created',
-      targetUrl: userWebhookUrl + 'messageCreation',
-    })
-    .expect(200)
-
-  const { body: entryWebhook } = await request(t.context.serverUrl)
-    .post('/webhooks')
-    .set(authorizationHeaders)
-    .send({
-      name: 'Webhook for entry creation',
-      event: 'entry__created',
-      targetUrl: userWebhookUrl + 'entryCreation',
-    })
-    .expect(200)
-
-  createdWebhooks = _.keyBy([
-    messageWebhook,
-    entryWebhook,
-  ], 'event')
-
-  await request(t.context.serverUrl)
-    .post('/messages')
-    .set(authorizationHeaders)
-    .send({
-      topicId: 'ast_2l7fQps1I3a1gJYz2I3a',
-      receiverId: 'user-external-id',
-      content: 'Good',
-    })
-    .expect(200)
-
-  await request(t.context.serverUrl)
-    .post('/entries')
-    .set(authorizationHeaders)
-    .send({
-      collection: 'someCollection',
-      locale: 'en-US',
-      name: 'nameExample',
-      fields: {
-        title: 'Random title',
-        content: 'Random content',
-        nestedContent: {
-          random1: {
-            random2: 'hello'
-          },
-          random3: 'bye'
-        }
-      }
-    })
-    .expect(200)
-
-  await new Promise(resolve => setTimeout(resolve, defaultTestDelay))
-}
 
 test.before(async (t) => {
   await before({ name: 'webhook' })(t)
@@ -127,8 +48,6 @@ test.before(async (t) => {
       resolve()
     })
   })
-
-  await createWebhookLogs(t)
 })
 // test.beforeEach(beforeEach()) // concurrent tests are much faster
 test.after(async (t) => {
@@ -190,9 +109,8 @@ test('list webhooks with custom namespace', async (t) => {
 
   const webhooks = obj.results
 
-  let hasAtLeastOneCustomNamespace = false
-  webhooks.forEach(webhook => {
-    hasAtLeastOneCustomNamespace = typeof webhook.platformData._custom !== 'undefined'
+  const hasAtLeastOneCustomNamespace = webhooks.some(webhook => {
+    return typeof webhook.platformData._custom !== 'undefined'
   })
 
   t.true(hasAtLeastOneCustomNamespace)
@@ -492,15 +410,8 @@ test('list webhook logs', async (t) => {
 test('list webhook logs with id filter', async (t) => {
   const authorizationHeaders = await getAccessTokenHeaders({ t, permissions: ['webhookLog:list:all'] })
 
-  const { body: { results: webhookLogs } } = await request(t.context.serverUrl)
-    .get('/webhook-logs')
-    .set(authorizationHeaders)
-    .expect(200)
-
-  const webhookLog = webhookLogs[0]
-
   const { body: obj } = await request(t.context.serverUrl)
-    .get(`/webhook-logs?id=${webhookLog.id}`)
+    .get('/webhook-logs?id=whl_PGs7t1e1u9R1khtcdu9H')
     .set(authorizationHeaders)
     .expect(200)
 
@@ -517,14 +428,12 @@ test('list webhook logs with advanced filters', async (t) => {
 
   const minDate = '2019-01-01T00:00:00.000Z'
 
-  const {
-    entry__created: entryWorkflow,
-    message__created: messageWorkflow,
-  } = createdWebhooks
+  const entryWorkflowId = 'whl_u1CXfQe1B4z1jypAdB4p'
+  const messageWorkflowId = 'whl_PGs7t1e1u9R1khtcdu9H'
 
   const params = `createdDate[gte]=${encodeURIComponent(minDate)}` +
-    `&webhookId[]=${entryWorkflow.id}` +
-    `&webhookId[]=${messageWorkflow.id}`
+    `&webhookId[]=${entryWorkflowId}` +
+    `&webhookId[]=${messageWorkflowId}`
 
   const { body: obj } = await request(t.context.serverUrl)
     .get(`/webhook-logs?${params}`)
@@ -534,7 +443,7 @@ test('list webhook logs with advanced filters', async (t) => {
   t.is(obj.results.length, obj.nbResults)
   obj.results.forEach(webhookLog => {
     t.true(webhookLog.createdDate >= minDate)
-    t.true([entryWorkflow.id, messageWorkflow.id].includes(webhookLog.webhookId))
+    t.true([entryWorkflowId, messageWorkflowId].includes(webhookLog.webhookId))
   })
 })
 
@@ -542,22 +451,16 @@ test('finds a webhook log', async (t) => {
   const authorizationHeaders = await getAccessTokenHeaders({
     t,
     permissions: [
-      'webhookLog:list:all',
       'webhookLog:read:all'
     ]
   })
 
-  const { body: { results: webhookLogs } } = await request(t.context.serverUrl)
-    .get('/webhook-logs')
-    .set(authorizationHeaders)
-    .expect(200)
-
   const { body: webhookLog } = await request(t.context.serverUrl)
-    .get(`/webhook-logs/${webhookLogs[0].id}`)
+    .get('/webhook-logs/whl_PGs7t1e1u9R1khtcdu9H')
     .set(authorizationHeaders)
     .expect(200)
 
-  t.is(webhookLog.id, webhookLogs[0].id)
+  t.is(webhookLog.id, 'whl_PGs7t1e1u9R1khtcdu9H')
 })
 
 // ////////// //
@@ -724,9 +627,8 @@ test('2019-05-20: list webhooks with custom namespace', async (t) => {
 
   t.true(Array.isArray(webhooks))
 
-  let hasAtLeastOneCustomNamespace = false
-  webhooks.forEach(webhook => {
-    hasAtLeastOneCustomNamespace = typeof webhook.platformData._custom !== 'undefined'
+  const hasAtLeastOneCustomNamespace = webhooks.some(webhook => {
+    return typeof webhook.platformData._custom !== 'undefined'
   })
 
   t.true(hasAtLeastOneCustomNamespace)
