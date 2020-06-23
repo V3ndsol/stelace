@@ -1,6 +1,6 @@
 // from most recent versions to oldest ones
 const apiVersions = [
-  '2020-06-12', // TODO: adapt the version number
+  '2020-07-20',
   '2019-05-20'
 ]
 

@@ -1,5 +1,5 @@
 const responseChanges = {
-  '2020-06-12': [
+  '2020-07-20': [
     {
       target: 'webhook.list',
       description: 'Webhooks list is returned without pagination meta',

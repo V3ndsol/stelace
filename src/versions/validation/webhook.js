@@ -17,10 +17,10 @@ const webhookLogOrderByFields = [
 ]
 
 // ////////// //
-// 2020-06-12 //
+// 2020-07-20 //
 // ////////// //
-schemas['2020-06-12'] = {}
-schemas['2020-06-12'].list = {
+schemas['2020-07-20'] = {}
+schemas['2020-07-20'].list = {
   query: Joi.object().keys({
     // order
     orderBy: Joi.string().valid(...webhookOrderByFields).default('createdDate'),
@@ -39,7 +39,7 @@ schemas['2020-06-12'].list = {
   })
 }
 
-schemas['2020-06-12'].listLogs = {
+schemas['2020-07-20'].listLogs = {
   query: Joi.object().keys({
     // order
     orderBy: Joi.string().valid(...webhookLogOrderByFields).default('createdDate'),
@@ -58,7 +58,7 @@ schemas['2020-06-12'].listLogs = {
   })
 }
 
-schemas['2020-06-12'].readLog = {
+schemas['2020-07-20'].readLog = {
   params: objectIdParamsSchema
 }
 
@@ -92,18 +92,18 @@ schemas['2019-05-20'].remove = {
 }
 
 const validationVersions = {
-  '2020-06-12': [
+  '2020-07-20': [
     {
       target: 'webhook.list',
-      schema: schemas['2020-06-12'].list
+      schema: schemas['2020-07-20'].list
     },
     {
       target: 'webhook.listLogs',
-      schema: schemas['2020-06-12'].listLogs
+      schema: schemas['2020-07-20'].listLogs
     },
     {
       target: 'webhook.readLog',
-      schema: schemas['2020-06-12'].readLog
+      schema: schemas['2020-07-20'].readLog
     },
   ],
 

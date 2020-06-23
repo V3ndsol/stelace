@@ -40,10 +40,10 @@ const runSchema = Joi.array().items(Joi.object({
 const schemas = {}
 
 // ////////// //
-// 2020-06-12 //
+// 2020-07-20 //
 // ////////// //
-schemas['2020-06-12'] = {}
-schemas['2020-06-12'].list = {
+schemas['2020-07-20'] = {}
+schemas['2020-07-20'].list = {
   query: Joi.object().keys({
     // order
     orderBy: Joi.string().valid(...workflowOrderByFields).default('createdDate'),
@@ -62,7 +62,7 @@ schemas['2020-06-12'].list = {
   })
 }
 
-schemas['2020-06-12'].listLogs = {
+schemas['2020-07-20'].listLogs = {
   query: Joi.object().keys({
     // order
     orderBy: Joi.string().valid(...workflowLogOrderByFields).default('createdDate'),
@@ -83,7 +83,7 @@ schemas['2020-06-12'].listLogs = {
   })
 }
 
-schemas['2020-06-12'].readLog = {
+schemas['2020-07-20'].readLog = {
   params: objectIdParamsSchema
 }
 
@@ -120,18 +120,18 @@ schemas['2019-05-20'].remove = {
 }
 
 const validationVersions = {
-  '2020-06-12': [
+  '2020-07-20': [
     {
       target: 'workflow.list',
-      schema: schemas['2020-06-12'].list
+      schema: schemas['2020-07-20'].list
     },
     {
       target: 'workflow.listLogs',
-      schema: schemas['2020-06-12'].listLogs
+      schema: schemas['2020-07-20'].listLogs
     },
     {
       target: 'workflow.readLog',
-      schema: schemas['2020-06-12'].readLog
+      schema: schemas['2020-07-20'].readLog
     },
   ],
 
