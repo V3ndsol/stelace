@@ -17,7 +17,6 @@ const workflowOrderByFields = [
 const workflowLogOrderByFields = [
   'createdDate',
   'type',
-  'statusCode',
 ]
 
 const runSchema = Joi.array().items(Joi.object({

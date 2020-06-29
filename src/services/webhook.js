@@ -299,7 +299,7 @@ function start ({ communication }) {
           query: 'inList'
         },
         statuses: {
-          dbField: 'statusCode',
+          dbField: 'status',
           value: status,
           transformValue: 'array',
           query: 'inList'
